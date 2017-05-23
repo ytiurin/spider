@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script type="text/javascript" src="../../src/modules/drag.js"></script>
+
+</head><body>
+
+  <div id="info">
+    <div id="coords">0x0</div>
+    <div id="eps">0EPS</div>
+    <div id="rps">0RPS</div>
+    <div id="eventname"></div>
+  </div>
+  <div id="drag-area"><div id="drag-in"></div></div>
+  <div id="image"></div>
+  <div id="vline"></div>
+  <div id="hline"></div>
+
+  <script type="text/javascript" src="play.js"></script>
+
+  <style>
+    body {
+      /*overflow: hidden;*/
+      height: 2000px;
+    }
+    #info {
+      position: fixed;
+      right: 20px;
+      text-align: right;
+      top: 20px;
+    }
+    #drag-area {
+      border: 1px solid black;
+      height: 480px;
+      position: relative;
+      margin: 100px;
+      width: 640px;
+    }
+    #drag-in {
+      background-color: red;
+      height: 100px;
+      left: 50%;
+      margin: -50px;
+      position: absolute;
+      top: 50%;
+      width: 100px;
+      z-index: 9999;
+    }
+    #vline, #hline {
+      background-color: red;
+      height: 1px;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 1px;
+    }
+    #vline {
+      width: 100%;
+    }
+    #hline {
+      height: 100%;
+    }
+    #image {
+      background-image: url("01.jpg");
+      background-size: cover;
+      left: 0;
+      height: 200px;
+      position: absolute;
+      /*transform: translate3d(-9999px,-9999px,0);*/
+      transition: transform .05s linear;
+      top: 0;
+      width: 200px;
+    }
+  </style>
+
+</body></html>

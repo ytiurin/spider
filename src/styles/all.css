@@ -1,0 +1,38 @@
+.card {
+  perspective: 1000px;
+}
+.card .transform-box,
+.card .rotate-box,
+.card .face {
+  height: 100%;
+  width: 100%;
+}
+.card .transform-box {
+  perspective: 1000px;
+  transition: transform .05s;
+}
+.card .rotate-box {
+  /*transition: transform .3s;*/
+}
+.card .face {
+  transition: box-shadow .3s;
+}
+.card.lifted .face {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+.card.lean-bottom .rotate-box {
+  transform: rotate3d(1, 0, 0, 15deg)}
+.card.lean-bottom-left .rotate-box {
+  transform: rotate3d(1, 0, 0, -15deg) rotate3d(0, 1, 0, -15deg)}
+.card.lean-bottom-right .rotate-box {
+  transform: rotate3d(1, 0, 0, -15deg) rotate3d(0, 1, 0, 15deg)}
+.card.lean-left .rotate-box {
+  transform: rotate3d(0, 1, 0, -15deg)}
+.card.lean-right .rotate-box {
+  transform: rotate3d(0, 1, 0, 15deg)}
+.card.lean-top .rotate-box {
+  transform: rotate3d(1, 0, 0, -15deg)}
+.card.lean-top-left .rotate-box {
+  transform: rotate3d(1, 0, 0, 15deg) rotate3d(0, 1, 0, -15deg)}
+.card.lean-top-right .rotate-box {
+  transform: rotate3d(1, 0, 0, 15deg) rotate3d(0, 1, 0, 15deg)}

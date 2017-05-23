@@ -1,0 +1,70 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body>
+
+  <div class="row">
+    <div class="card"><div class="rotation x s1"><div class="face"></div></div></div>
+    <div class="card"><div class="rotation x s2"><div class="face"></div></div></div>
+    <div class="card"><div class="rotation x s3"><div class="face"></div></div></div>
+    <div class="card"><div class="rotation x s4"><div class="face"></div></div></div>
+  </div>
+  <div class="row">
+    <div class="card"><div class="rotation y s1"><div class="face"></div></div></div>
+    <div class="card"><div class="rotation y s2"><div class="face"></div></div></div>
+    <div class="card"><div class="rotation y s3"><div class="face"></div></div></div>
+    <div class="card"><div class="rotation y s4"><div class="face"></div></div></div>
+  </div>
+  <div class="row">
+    <div class="card"><div class="rotation z s1"><div class="face"></div></div></div>
+    <div class="card"><div class="rotation z s2"><div class="face"></div></div></div>
+    <div class="card"><div class="rotation z s3"><div class="face"></div></div></div>
+    <div class="card"><div class="rotation z s4"><div class="face"></div></div></div>
+  </div>
+
+  <style>
+    body {
+      /*overflow: hidden;*/
+    }
+    .row {
+      display: flex;
+    }
+    .card {
+      height: 218px;
+      margin: 40px;
+      perspective: 1000px;
+      width: 150px;
+    }
+    .card .rotation {
+      height: 100%;
+      width: 100%;
+    }
+    .card .face {
+      background-image: url(01.jpg);
+      background-size: cover;
+      box-shadow: 0 0 20px black;
+      height: 100%;
+      width: 100%;
+    }
+    @keyframes rotationX {
+      0% { transform: rotate3d(0,0,0,0) }
+      50% { transform: rotate3d(1,0,0,180deg) }
+      100% { transform: rotate3d(1,0,0,360deg) }
+    }
+    @keyframes rotationY {
+      0% { transform: rotate3d(0,0,0,0) }
+      50% { transform: rotate3d(0,1,0,180deg) }
+      100% { transform: rotate3d(0,1,0,360deg) }
+    }
+    @keyframes rotationZ {
+      0% { transform: rotate3d(0,0,0,0) }
+      50% { transform: rotate3d(0,0,1,180deg) }
+      100% { transform: rotate3d(0,0,1,360deg) }
+    }
+    .rotation.x { animation: 1s linear 0s infinite rotationX }
+    .rotation.y { animation: 1s linear 0s infinite rotationY }
+    .rotation.z { animation: 1s linear 0s infinite rotationZ }
+    .rotation.s1 { animation-duration: .5s }
+    .rotation.s2 { animation-duration: 1s }
+    .rotation.s3 { animation-duration: 2s }
+    .rotation.s4 { animation-duration: 4s }
+  </style>
+
+</body></html>
