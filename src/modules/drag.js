@@ -1,6 +1,13 @@
 +function() {
 
+  var DEBUG = !1
   var BLOCK_TIMEOUT = 1000 / 60 + 1
+
+  function log()
+  {
+    if (DEBUG)
+      console.log.apply(window, arguments)
+  }
 
   function applyCoordsToEvent(event)
   {
@@ -28,6 +35,8 @@
 
   function mouseDown(e)
   {
+    log("MOUSEDOWN")
+
     isDragging = 1
     target = e.target
     targetStartX = e.offsetX
@@ -41,10 +50,10 @@
 
   function mouseMove(e)
   {
-    // console.log(e)
     if (!isDragging)
       return;
 
+    log("DRAG")
     clientX = e.clientX
     clientY = e.clientY
 

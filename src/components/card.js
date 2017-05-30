@@ -17,7 +17,7 @@
   {
     var component = new Component(this, CardHTML)
 
-    smoothDrag({
+    dragCard({
       elContainer: component.publ.elements[0],
       elInteract: component.anchors.face[0],
       elRotateBox: component.anchors.rotateBox[0],
@@ -26,7 +26,7 @@
 
     var nextCard
 
-    
+
 
     component.mount()
   }

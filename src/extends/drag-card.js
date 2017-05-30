@@ -3,11 +3,19 @@
     window[name] = modules[name]})
 } (function() {
 
+  var DEBUG = 1;
+
   // MODULE BODY
   var ROTATION_X_POS_LIMIT = 10
   var ROTATION_X_NEG_LIMIT = -10
   var ROTATION_Y_POS_LIMIT = 20
   var ROTATION_Y_NEG_LIMIT = -20
+
+  function log()
+  {
+    if (DEBUG)
+      console.log.apply(window, arguments)
+  }
 
   function applyLimit(value, posLimit, negLimit)
   {
@@ -17,7 +25,7 @@
     return value
   }
 
-  function smoothDrag(elements)
+  function dragCard(elements)
   {
     function applyRotation()
     {
@@ -29,15 +37,20 @@
 
     function persistRotationTo(XDeg, YDeg)
     {
-      rotateX(rotateXDeg > XDeg ? -1 : 1)
-      rotateY(rotateYDeg > YDeg ? -1 : 1)
+      if (XDeg !== rotateXDeg)
+        rotateX(rotateXDeg > XDeg ? -1 : 1)
+
+      if (YDeg !== rotateYDeg)
+        rotateY(rotateYDeg > YDeg ? -1 : 1)
 
       applyRotation()
 
-      if (XDeg !== rotateXDeg || YDeg !== rotateYDeg)
-        tendRotationAFID = requestAnimationFrame(function() {
-          persistRotationTo(XDeg, YDeg)
-        })
+      if (XDeg === rotateXDeg && YDeg === rotateYDeg)
+        return
+
+      tendRotationAFID = requestAnimationFrame(function() {
+        persistRotationTo(XDeg, YDeg)
+      })
     }
 
     function tendRotationTo(XDeg, YDeg)
@@ -60,7 +73,8 @@
 
     function drag(e)
     {
-      // console.log(e)
+      log("DRAG CARD")
+
       translateX = e.clientX - e.targetStartX
       translateY = e.clientY - e.targetStartY
       elTransformBox.style.transform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)`
@@ -130,6 +144,6 @@
 
   // MODULE EXPORT
   return {
-    smoothDrag: smoothDrag
+    dragCard: dragCard
   }
 })
