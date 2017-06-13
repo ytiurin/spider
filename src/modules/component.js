@@ -68,12 +68,12 @@
       clearTimeout( notifyTimeoutID[ propName ] );
 
       notifyTimeoutID[ propName ] = setTO( function() {
-        for ( var i in modelObservers[ propName ] )
-          modelObservers[ propName ][i]( model[ propName ] );
+        for ( var i in propsObservers[ propName ] )
+          propsObservers[ propName ][i]( props[ propName ] );
 
-        if ( modelObservers[''] )
-          for ( i in modelObservers[''] )
-            modelObservers[''][i]();
+        if ( propsObservers[''] )
+          for ( i in propsObservers[''] )
+            propsObservers[''][i]();
       });
     }
 
@@ -92,7 +92,7 @@
       var userObj = argsToObj( arguments ), propName;
 
       for ( propName in userObj ) {
-        model[ propName ] = userObj[ propName ];
+        props[ propName ] = userObj[ propName ];
 
         notifyObservers( propName );
       }
@@ -110,15 +110,15 @@
     component = this,
     elements = [],
     eventCallbacks = {},
-    model = {},
-    modelObservers = {},
+    props = {},
+    propsObservers = {},
     notifyTimeoutID = {},
     s, d = document, setTO = setTimeout;
 
     // COMPONENT PROPERTIES
     component.anchors = [];
     component.elements = elements;
-    component.model = model;
+    component.props = props;
 
     // COMPONENT INTERFACE
     component.destroy = destroy;
@@ -132,13 +132,13 @@
       });
     };
 
-    component.onModelUpdate=function(){
+    component.onUpdate=function(){
       var updateCallbacks = argsToObj( arguments ), propName;
 
       for ( propName in updateCallbacks ) {
-        model[ propName ] = model[ propName ] || null;
-        modelObservers[propName]=modelObservers[propName]||[];
-        modelObservers[propName].push(updateCallbacks[propName]);
+        props[ propName ] = props[ propName ] || null;
+        propsObservers[propName]=propsObservers[propName]||[];
+        propsObservers[propName].push(updateCallbacks[propName]);
         notifyObservers(propName);
       }
     };
@@ -152,7 +152,7 @@
 
     publicInterface.elements = elements;
     publicInterface.destroy = destroy;
-    publicInterface.model = model;
+    publicInterface.props = props;
     publicInterface.mount = mount;
     publicInterface.on = on;
     publicInterface.set = set;

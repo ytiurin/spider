@@ -3,9 +3,9 @@
     window[name] = modules[name]})
 } (function() {
 
+  // MODULE BODY
   var DEBUG = 0;
 
-  // MODULE BODY
   var ROTATION_X_POS_LIMIT = 10
   var ROTATION_X_NEG_LIMIT = -10
   var ROTATION_Y_POS_LIMIT = 20
@@ -24,25 +24,13 @@
     return value
   }
 
-  function dragCard(elements)
+  function dragCard(elements, transform, eventHandlers)
   {
-    function translate3d(x, y, z)
-    {
-      translateX = x
-      translateY = y
-      translateZ = z
-
-      elTransformBox.style.transform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)`
-      elContainer.style.perspectiveOrigin =
-        `${translateX + (cardWidth / 2 >> 0)}px ` +
-        `${translateY + (cardHeight / 2 >> 0)}px`
-    }
-
     function applyRotation()
     {
       cancelAnimationFrame(applyRotationAFID)
       applyRotationAFID = requestAnimationFrame(function() {
-        elRotateBox.style.transform = `rotate3d(1,0,0,${rotateXDeg}deg) rotate3d(0,1,0,${rotateYDeg}deg)`
+        transform.rotate3d(rotateXDeg, rotateYDeg, 0)
       })
     }
 
@@ -86,10 +74,10 @@
     {
       log("DRAG CARD")
 
-      translate3d(
-        e.clientX - e.targetStartX + cardWidth,
-        e.clientY - e.targetStartY + cardHeight,
-        translateZ)
+      transform.translate3d(
+        e.clientX - e.targetStartX,
+        e.clientY - e.targetStartY,
+        null)
 
       var YSpeed = e.clientX - (prevDragX || e.clientX)
       var XSpeed = e.clientY - (prevDragY || e.clientY)
@@ -107,22 +95,20 @@
 
     function mousedown(e)
     {
-      translate3d(translateX, translateY, 100)
+      transform.translate3d(null, null, 100)
     }
 
     function dragend(e)
     {
-      translate3d(translateX, translateY, 0)
+      transform.translate3d(null, null, 0)
+
+      eventHandlers && eventHandlers.dragend
+        && eventHandlers.dragend(translateX, translateY,
+          translateX + cardWidth, translateY + cardHeight)
     }
 
     var elContainer    = elements.elContainer
     var elInteract     = elements.elInteract
-    var elRotateBox    = elements.elRotateBox
-    var elTransformBox = elements.elTransformBox
-
-    var translateX = 0
-    var translateY = 0
-    var translateZ = 0
 
     var prevDragX  = 0
     var prevDragY  = 0
@@ -138,19 +124,6 @@
     elInteract.addEventListener("drag",      drag)
     elInteract.addEventListener("mousedown", mousedown)
     elInteract.addEventListener("dragend",   dragend)
-
-    var cardWidth
-    var cardHeight
-
-    setTimeout(function() {
-      var rect = elContainer.getBoundingClientRect()
-      cardWidth  = rect.width
-      cardHeight = rect.height
-      elContainer.style.left = -rect.width + 'px'
-      elContainer.style.top  = -rect.height + 'px'
-
-      translate3d(cardWidth, cardHeight, translateZ)
-    })
   }
 
   // MODULE EXPORT
