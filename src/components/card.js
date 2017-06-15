@@ -28,17 +28,22 @@
       animation.move(card.props.x, card.props.y + 100);
     }
 
-    function dragend(x, y, xw, yh)
+    function dragend(e)
     {
+      var x  = e.clientX - e.targetStartX
+      var y  = e.clientY - e.targetStartY
+      var xw = x + cardWidth
+      var yh = y + cardHeight
+
       component.props.x  = x
       component.props.y  = y
       component.props.xw = xw
       component.props.yh = yh
-      console.log(x,y,xw,yh)
+      // console.log(x,y,xw,yh)
 
       var card = canStickToCards.reduce(function(r, card) {
         var cm = card.props;
-        console.log(cm.x,cm.y,cm.xw,cm.yh)
+        // console.log(cm.x,cm.y,cm.xw,cm.yh)
         if (
              pointBounded(x,  y,  cm.x, cm.y, cm.xw, cm.yh) // top left corner
           || pointBounded(xw, y,  cm.x, cm.y, cm.xw, cm.yh) // top right corner
@@ -61,19 +66,26 @@
 
     var component = new Component(this, CardHTML)
 
-    var transform = transformCard({
-      elContainer    : component.publ.elements[0],
-      elRotateBox    : component.anchors.rotateBox[0],
-      elTransformBox : component.anchors.transformBox[0],
+    var elContainer    = component.publ.elements[0]
+    var elInteract     = component.anchors.face[0]
+    var elRotateBox    = component.anchors.rotateBox[0]
+    var elTransformBox = component.anchors.transformBox[0]
+
+    var transform = transformCard({ elContainer: elContainer,
+      elRotateBox: elRotateBox, elTransformBox: elTransformBox })
+
+    dragCard({ elContainer: elContainer, elInteract: elInteract }, transform)
+
+    var cardWidth
+    var cardHeight
+
+    setTimeout(function() {
+      var rect = elContainer.getBoundingClientRect()
+      cardWidth  = rect.width
+      cardHeight = rect.height
     })
 
-    dragCard({
-      elContainer: component.publ.elements[0],
-      elInteract: component.anchors.face[0],
-    },
-    transform, {
-      dragend: dragend
-    })
+    elInteract.addEventListener("dragend", dragend)
 
     var animation = animateCard(transform)
 

@@ -10,6 +10,9 @@
   var ROTATION_X_NEG_LIMIT = -10
   var ROTATION_Y_POS_LIMIT = 20
   var ROTATION_Y_NEG_LIMIT = -20
+  var ROTATION_X_NEG_LIMIT = -10
+  var ROTATION_Z_POS_LIMIT = 10
+  var ROTATION_Z_NEG_LIMIT = -10
 
   function log()
   {
@@ -30,11 +33,11 @@
     {
       cancelAnimationFrame(applyRotationAFID)
       applyRotationAFID = requestAnimationFrame(function() {
-        transform.rotate3d(rotateXDeg, rotateYDeg, 0)
+        transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
       })
     }
 
-    function persistRotationTo(XDeg, YDeg)
+    function persistRotationTo(XDeg, YDeg, ZDeg)
     {
       if (XDeg !== rotateXDeg)
         rotateX(rotateXDeg > XDeg ? -1 : 1)
@@ -42,21 +45,24 @@
       if (YDeg !== rotateYDeg)
         rotateY(rotateYDeg > YDeg ? -1 : 1)
 
+      if (ZDeg !== rotateZDeg)
+        rotateZ(rotateZDeg > ZDeg ? -1 : 1)
+
       applyRotation()
 
-      if (XDeg === rotateXDeg && YDeg === rotateYDeg)
+      if (XDeg === rotateXDeg && YDeg === rotateYDeg && ZDeg === rotateZDeg)
         return
 
       tendRotationAFID = requestAnimationFrame(function() {
-        persistRotationTo(XDeg, YDeg)
+        persistRotationTo(XDeg, YDeg, ZDeg)
       })
     }
 
-    function tendRotationTo(XDeg, YDeg)
+    function tendRotationTo(XDeg, YDeg, ZDeg)
     {
       cancelAnimationFrame(tendRotationAFID)
       tendRotationAFID = requestAnimationFrame(function() {
-        persistRotationTo(XDeg, YDeg)
+        persistRotationTo(XDeg, YDeg, ZDeg)
       })
     }
 
@@ -68,6 +74,11 @@
     function rotateY(speed)
     {
       rotateYDeg = applyLimit(rotateYDeg + speed, ROTATION_Y_POS_LIMIT, ROTATION_Y_NEG_LIMIT)
+    }
+
+    function rotateZ(speed)
+    {
+      rotateZDeg = applyLimit(rotateZDeg + speed, ROTATION_Z_POS_LIMIT, ROTATION_Z_NEG_LIMIT)
     }
 
     function drag(e)
@@ -84,13 +95,13 @@
 
       rotateX(-XSpeed)
       rotateY(YSpeed)
-
+      rotateZ(YSpeed / 4 >> 0)
       applyRotation()
 
       prevDragX = e.clientX
       prevDragY = e.clientY
 
-      tendRotationTo(0, 0);
+      tendRotationTo(0, 0, 0);
     }
 
     function mousedown(e)
@@ -101,10 +112,10 @@
     function dragend(e)
     {
       transform.translate3d(null, null, 0)
-
-      eventHandlers && eventHandlers.dragend
-        && eventHandlers.dragend(translateX, translateY,
-          translateX + cardWidth, translateY + cardHeight)
+      rotateXDeg = 0
+      rotateYDeg = 0
+      rotateZDeg = 0
+      applyRotation()
     }
 
     var elContainer    = elements.elContainer
@@ -114,6 +125,7 @@
     var prevDragY  = 0
     var rotateXDeg = 0
     var rotateYDeg = 0
+    var rotateZDeg = 0
 
     var tendRotationAFID  = 0
     var tendRotationTOID  = 0

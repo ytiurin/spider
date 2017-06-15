@@ -11,10 +11,13 @@
     DEBUG && console.log.apply(window, arguments)
   }
 
-  function animateCard(elements)
+  function animateCard(transform)
   {
-    function move()
-    {}
+    function move(x, y)
+    {
+      transform.translate3d(x, y, null);
+      transform.rotate3d(0, 0, 0);
+    }
 
     return {
       move: move

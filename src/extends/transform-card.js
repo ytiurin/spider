@@ -31,7 +31,7 @@
       elTransformBox.style.transform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)`
       elContainer.style.perspectiveOrigin =
         `${translateX + (cardWidth / 2 >> 0)}px ` +
-        `${translateY + (cardHeight / 2 >> 0)}px`
+        `${translateY + (cardWidth / 2 >> 0)}px`
     }
 
     var elContainer    = elements.elContainer
