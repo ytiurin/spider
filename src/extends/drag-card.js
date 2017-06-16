@@ -10,7 +10,6 @@
   var ROTATION_X_NEG_LIMIT = -10
   var ROTATION_Y_POS_LIMIT = 20
   var ROTATION_Y_NEG_LIMIT = -20
-  var ROTATION_X_NEG_LIMIT = -10
   var ROTATION_Z_POS_LIMIT = 10
   var ROTATION_Z_NEG_LIMIT = -10
 
@@ -31,10 +30,7 @@
   {
     function applyRotation()
     {
-      cancelAnimationFrame(applyRotationAFID)
-      applyRotationAFID = requestAnimationFrame(function() {
-        transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
-      })
+      transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
     }
 
     function persistRotationTo(XDeg, YDeg, ZDeg)
@@ -93,8 +89,8 @@
       var YSpeed = e.clientX - (prevDragX || e.clientX)
       var XSpeed = e.clientY - (prevDragY || e.clientY)
 
-      rotateX(-XSpeed)
-      rotateY(YSpeed)
+      rotateX(-XSpeed / 4 >> 0)
+      rotateY(YSpeed / 4 >> 0)
       rotateZ(YSpeed / 4 >> 0)
       applyRotation()
 
@@ -129,7 +125,6 @@
 
     var tendRotationAFID  = 0
     var tendRotationTOID  = 0
-    var applyRotationAFID = 0
 
     var isLifted = !1
 

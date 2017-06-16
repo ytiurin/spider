@@ -6,9 +6,7 @@
   var CardHTML = `
 <div class="card">
   <div class="transform-box" transform-box>
-    <div class="rotate-box" rotate-box>
-      <div class="face" face></div>
-    </div>
+    <div class="face" face></div>
   </div>
 </div>
 `
@@ -68,11 +66,10 @@
 
     var elContainer    = component.publ.elements[0]
     var elInteract     = component.anchors.face[0]
-    var elRotateBox    = component.anchors.rotateBox[0]
     var elTransformBox = component.anchors.transformBox[0]
 
     var transform = transformCard({ elContainer: elContainer,
-      elRotateBox: elRotateBox, elTransformBox: elTransformBox })
+      elTransformBox: elTransformBox })
 
     dragCard({ elContainer: elContainer, elInteract: elInteract }, transform)
 

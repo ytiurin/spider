@@ -13,13 +13,30 @@
 
   function transformCard(elements)
   {
+    function applyTransform()
+    {
+      elContainer.style.perspectiveOrigin =
+          `${translateX + (cardWidth / 2 >> 0)}px ` +
+          `${translateY + (cardWidth / 2 >> 0)}px`
+
+      elTransformBox.style.transform =
+      `translate3d(${translateX}px,${translateY}px,${translateZ}px) `+
+      `rotate3d(1,0,0,${rotateXDeg}deg) rotate3d(0,1,0,${rotateYDeg}deg) rotate3d(0,0,1,${rotateZDeg}deg)`
+    }
+
+    function transform()
+    {
+      cancelAnimationFrame(applyTransformAFID)
+      applyTransformAFID = requestAnimationFrame(applyTransform)
+    }
+
     function rotate3d(xDeg, yDeg, zDeg)
     {
       rotateXDeg = xDeg === null ? rotateXDeg : xDeg
       rotateYDeg = yDeg === null ? rotateYDeg : yDeg
       rotateZDeg = zDeg === null ? rotateZDeg : zDeg
 
-      elRotateBox.style.transform = `rotate3d(1,0,0,${rotateXDeg}deg) rotate3d(0,1,0,${rotateYDeg}deg) rotate3d(0,0,1,${rotateZDeg}deg)`
+      transform();
     }
 
     function translate3d(x, y, z)
@@ -28,15 +45,13 @@
       translateY = y === null ? translateY : y + cardHeight
       translateZ = z === null ? translateZ : z
 
-      elTransformBox.style.transform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)`
-      elContainer.style.perspectiveOrigin =
-        `${translateX + (cardWidth / 2 >> 0)}px ` +
-        `${translateY + (cardWidth / 2 >> 0)}px`
+      transform();
     }
 
     var elContainer    = elements.elContainer
-    var elRotateBox    = elements.elRotateBox
     var elTransformBox = elements.elTransformBox
+
+    var applyTransformAFID
 
     setTimeout(function() {
       var rect = elContainer.getBoundingClientRect()
