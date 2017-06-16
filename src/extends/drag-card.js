@@ -28,11 +28,6 @@
 
   function dragCard(elements, transform, eventHandlers)
   {
-    function applyRotation()
-    {
-      transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
-    }
-
     function persistRotationTo(XDeg, YDeg, ZDeg)
     {
       if (XDeg !== rotateXDeg)
@@ -44,7 +39,7 @@
       if (ZDeg !== rotateZDeg)
         rotateZ(rotateZDeg > ZDeg ? -1 : 1)
 
-      applyRotation()
+      transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
 
       if (XDeg === rotateXDeg && YDeg === rotateYDeg && ZDeg === rotateZDeg)
         return
@@ -90,9 +85,9 @@
       var XSpeed = e.clientY - (prevDragY || e.clientY)
 
       rotateX(-XSpeed / 4 >> 0)
-      rotateY(YSpeed / 4 >> 0)
-      rotateZ(YSpeed / 4 >> 0)
-      applyRotation()
+      rotateY( YSpeed / 4 >> 0)
+      rotateZ( YSpeed / 4 >> 0)
+      transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
 
       prevDragX = e.clientX
       prevDragY = e.clientY
@@ -111,11 +106,11 @@
       rotateXDeg = 0
       rotateYDeg = 0
       rotateZDeg = 0
-      applyRotation()
+      transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
     }
 
-    var elContainer    = elements.elContainer
-    var elInteract     = elements.elInteract
+    var elContainer = elements.elContainer
+    var elInteract  = elements.elInteract
 
     var prevDragX  = 0
     var prevDragY  = 0
@@ -123,8 +118,7 @@
     var rotateYDeg = 0
     var rotateZDeg = 0
 
-    var tendRotationAFID  = 0
-    var tendRotationTOID  = 0
+    var tendRotationAFID = 0
 
     var isLifted = !1
 
