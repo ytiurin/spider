@@ -3,6 +3,8 @@
     window[name] = modules[name]})
 } (function() {
 
+  var MAX_CHILD_CARD_DISTANCE = 60
+
   var CardHTML = `
 <div class="card">
   <div class="transform-box" transform-box>
@@ -21,9 +23,9 @@
     function stickToCard(card)
     {
       component.props.parentCard = card
-      card.props.childCard = component.publ
+      card.set('childCard', component.publ)
 
-      animation.move(card.props.x, card.props.y + 100);
+      animation.move(card.props.x, card.props.y + childCardDistance);
     }
 
     function dragend(e)
@@ -59,9 +61,6 @@
     var canAcceptStickyCards = []
     var canStickToCards      = []
 
-    var childCard
-    var parentCard
-
     var component = new Component(this, CardHTML)
 
     var elContainer    = component.publ.elements[0]
@@ -71,10 +70,25 @@
     var transform = transformCard({ elContainer: elContainer,
       elTransformBox: elTransformBox })
 
-    dragCard({ elContainer: elContainer, elInteract: elInteract }, transform)
+    var publTransform = {
+      rotate3d: function() {
+        transform.rotate3d.apply({}, arguments)
+        var childCard = component.props.childCard
+        childCard && childCard.transform.rotate3d.apply({}, arguments)
+      },
+      translate3d: function(x, y, z) {
+        transform.translate3d.apply({}, arguments)
+        var childCard = component.props.childCard
+        var y = y === null ? y : y + childCardDistance
+        childCard && childCard.transform.translate3d(x, y, z)
+      }
+    }
+
+    var drag = dragCard({ elContainer: elContainer, elInteract: elInteract }, publTransform)
 
     var cardWidth
     var cardHeight
+    var childCardDistance = MAX_CHILD_CARD_DISTANCE
 
     setTimeout(function() {
       var rect = elContainer.getBoundingClientRect()
@@ -84,9 +98,12 @@
 
     elInteract.addEventListener("dragend", dragend)
 
-    var animation = animateCard(transform)
+    var animation = animateCard(publTransform)
 
     component.onUpdate({
+      childCard: function(childCard) {
+        drag.hasChildCard = !!childCard
+      },
       className: function(cn) {
         var el = component.publ.elements[0]
         !el.classList.contains(cn)
@@ -109,6 +126,8 @@
       canStickToCards.push(card)
       card.allowStickyCard(component.publ)
     }
+
+    component.publ.transform = publTransform
 
     component.mount()
   }

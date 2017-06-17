@@ -84,9 +84,11 @@
       var YSpeed = e.clientX - (prevDragX || e.clientX)
       var XSpeed = e.clientY - (prevDragY || e.clientY)
 
-      rotateX(-XSpeed / 4 >> 0)
+      if (!publ.hasChildCard) {
+        rotateX(-XSpeed / 4 >> 0)
+        rotateZ( YSpeed / 4 >> 0)
+      }
       rotateY( YSpeed / 4 >> 0)
-      rotateZ( YSpeed / 4 >> 0)
       transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
 
       prevDragX = e.clientX
@@ -125,6 +127,10 @@
     elInteract.addEventListener("drag",      drag)
     elInteract.addEventListener("mousedown", mousedown)
     elInteract.addEventListener("dragend",   dragend)
+
+    var publ = { hasChildCard: false }
+
+    return publ
   }
 
   // MODULE EXPORT
