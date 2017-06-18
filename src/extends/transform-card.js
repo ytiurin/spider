@@ -17,7 +17,7 @@
     {
       elContainer.style.perspectiveOrigin =
           `${translateX + (cardWidth / 2 >> 0)}px ` +
-          `${translateY + (cardWidth / 2 >> 0)}px`
+          `${translateY + (cardHeight / 2 >> 0)}px`
 
       elTransformBox.style.transform =
       `translate3d(${translateX}px,${translateY}px,${translateZ}px) `+
@@ -48,6 +48,11 @@
       transform();
     }
 
+    function origin(x, y)
+    {console.log(x, y)
+      elTransformBox.style.transformOrigin = x && y ? `${x}px ${y}px` : ''
+    }
+
     var elContainer    = elements.elContainer
     var elTransformBox = elements.elTransformBox
 
@@ -71,6 +76,7 @@
     var translateZ = 0
 
     return {
+      origin: origin,
       rotate3d: rotate3d,
       translate3d: translate3d
     }

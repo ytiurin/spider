@@ -11,9 +11,6 @@
   perspective: 1000px;
   transition: transform .05s;
 }
-.card .rotate-box {
-  /*transition: transform .3s;*/
-}
 .card .face {
   transition: box-shadow .3s;
 }

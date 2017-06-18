@@ -71,6 +71,12 @@
       elTransformBox: elTransformBox })
 
     var publTransform = {
+      origin: function(x, y) {
+        transform.origin.apply({}, arguments)
+        var childCard = component.props.childCard
+        y = !y ? y : y - childCardDistance
+        childCard && childCard.transform.origin(x, y)
+      },
       rotate3d: function() {
         transform.rotate3d.apply({}, arguments)
         var childCard = component.props.childCard
@@ -79,7 +85,7 @@
       translate3d: function(x, y, z) {
         transform.translate3d.apply({}, arguments)
         var childCard = component.props.childCard
-        var y = y === null ? y : y + childCardDistance
+        y = y === null ? y : y + childCardDistance
         childCard && childCard.transform.translate3d(x, y, z)
       }
     }

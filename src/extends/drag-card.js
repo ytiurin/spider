@@ -84,10 +84,10 @@
       var YSpeed = e.clientX - (prevDragX || e.clientX)
       var XSpeed = e.clientY - (prevDragY || e.clientY)
 
-      if (!publ.hasChildCard) {
+      // if (!publ.hasChildCard) {
         rotateX(-XSpeed / 4 >> 0)
         rotateZ( YSpeed / 4 >> 0)
-      }
+      // }
       rotateY( YSpeed / 4 >> 0)
       transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
 
@@ -99,6 +99,7 @@
 
     function mousedown(e)
     {
+      transform.origin(e.offsetX, e.offsetY)
       transform.translate3d(null, null, 100)
     }
 
@@ -109,6 +110,7 @@
       rotateYDeg = 0
       rotateZDeg = 0
       transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
+      transform.origin()
     }
 
     var elContainer = elements.elContainer
