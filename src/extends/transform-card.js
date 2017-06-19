@@ -49,7 +49,7 @@
     }
 
     function origin(x, y)
-    {console.log(x, y)
+    {
       elTransformBox.style.transformOrigin = x && y ? `${x}px ${y}px` : ''
     }
 

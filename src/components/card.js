@@ -114,6 +114,9 @@
         var el = component.publ.elements[0]
         !el.classList.contains(cn)
           && el.classList.add(cn)
+      },
+      innerHTML: function(HTML) {
+        elInteract.innerHTML = HTML
       }
     })
 
@@ -134,6 +137,9 @@
     }
 
     component.publ.transform = publTransform
+
+    component.publ.rank = ''
+    component.publ.suit = ''
 
     component.mount()
   }
