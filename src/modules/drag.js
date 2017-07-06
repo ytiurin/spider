@@ -5,8 +5,7 @@
 
   function log()
   {
-    if (DEBUG)
-      console.log.apply(window, arguments)
+    DEBUG && console.log.apply(window, arguments)
   }
 
   function applyCoordsToEvent(event)
@@ -41,11 +40,13 @@
     target = e.target
     targetStartX = e.offsetX
     targetStartY = e.offsetY
+    clientX = e.clientX
+    clientY = e.clientY
   }
 
   function mouseLeave()
   {
-    dispatchDragEnd()
+    // dispatchDragEnd()
   }
 
   function mouseMove(e)
@@ -63,7 +64,7 @@
   function mouseUp(e)
   {
     // console.log(e)
-    dispatchDragEnd(e.client)
+    dispatchDragEnd()
   }
 
   function dispatchDrag()

@@ -1,28 +1,27 @@
 var cards = []
 var n = 0
-
+suit = rules.suits[0]
 for (var rank of rules.ranks) {
-  for (var suit of rules.suits) {
+  // for (var suit of rules.suits) {
     var card = new CardComponent
     ++n > 15 && (n = 1)
     card.rank = rank
     card.suit = suit
-    card.set('className', `color-${n}`)
-    card.set('innerHTML', suit + rank)
+    card.set({
+      className : `color-${n}`,
+      innerHTML : suit + rank,
+      width     : 150,
+      height    : 218
+    })
     cards.push(card)
-  }
+  // }
 }
-console.log(cards.map(function(card){return card.suit+card.rank}))
+
 var cardA, cardB, i = 0, j = 0
 while (cardA = cards[i++]) {
-  while (cardB = cards[j++]) {
-    console.log(cardA.suit+cardA.rank, cardB.suit+cardB.rank)
-    console.log(cardA)
-    if (rules.allowStickTo(cardA, cardB)) {
+  while (cardB = cards[j++])
+    if (rules.allowStickTo(cardA, cardB))
       cardA.allowStickToCard(cardB)
-
-    }
-  }
   j = 0
 }
 

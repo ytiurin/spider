@@ -4,86 +4,39 @@
 } (function() {
 
   // MODULE BODY
-  var DEBUG = 0;
-
-  function log()
+  function TransformCard(elPerspective, elTransform)
   {
-    DEBUG && console.log.apply(window, arguments)
-  }
+    // function origin(x, y)
+    // {
+    //   elTransform.style.transformOrigin = x && y ? `${x}px ${y}px` : ''
+    // }
 
-  function transformCard(elements)
-  {
-    function applyTransform()
-    {
-      elContainer.style.perspectiveOrigin =
-          `${translateX + (cardWidth / 2 >> 0)}px ` +
-          `${translateY + (cardHeight / 2 >> 0)}px`
+    this.offsetX    = 0
+    this.offsetY    = 0
+    this.originX    = 0
+    this.originY    = 0
+    this.rotateX    = 0
+    this.rotateY    = 0
+    this.rotateZ    = 0
+    this.translateX = 0
+    this.translateY = 0
 
-      elTransformBox.style.transform =
-      `translate3d(${translateX}px,${translateY}px,${translateZ}px) `+
-      `rotate3d(1,0,0,${rotateXDeg}deg) rotate3d(0,1,0,${rotateYDeg}deg) rotate3d(0,0,1,${rotateZDeg}deg)`
-    }
+    this.apply = function() {
+      var originX = this.translateX + this.offsetX
+      var originY = this.translateY + this.offsetY
 
-    function transform()
-    {
-      cancelAnimationFrame(applyTransformAFID)
-      applyTransformAFID = requestAnimationFrame(applyTransform)
-    }
+      elPerspective.style.perspectiveOrigin = `${originX >> 0}px ${originY >> 0}px`
 
-    function rotate3d(xDeg, yDeg, zDeg)
-    {
-      rotateXDeg = xDeg === null ? rotateXDeg : xDeg
-      rotateYDeg = yDeg === null ? rotateYDeg : yDeg
-      rotateZDeg = zDeg === null ? rotateZDeg : zDeg
-
-      transform();
-    }
-
-    function translate3d(x, y, z)
-    {
-      translateX = x === null ? translateX : x + cardWidth
-      translateY = y === null ? translateY : y + cardHeight
-      translateZ = z === null ? translateZ : z
-
-      transform();
-    }
-
-    function origin(x, y)
-    {
-      elTransformBox.style.transformOrigin = x && y ? `${x}px ${y}px` : ''
-    }
-
-    var elContainer    = elements.elContainer
-    var elTransformBox = elements.elTransformBox
-
-    var applyTransformAFID
-
-    setTimeout(function() {
-      var rect = elContainer.getBoundingClientRect()
-      cardWidth  = rect.width
-      cardHeight = rect.height
-      elContainer.style.left = -rect.width + 'px'
-      elContainer.style.top  = -rect.height + 'px'
-
-      translate3d(0, 0, 0)
-    })
-
-    var rotateXDeg = 0
-    var rotateYDeg = 0
-    var rotateZDeg = 0
-    var translateX = 0
-    var translateY = 0
-    var translateZ = 0
-
-    return {
-      origin: origin,
-      rotate3d: rotate3d,
-      translate3d: translate3d
+      elTransform.style.transform =
+      `translate3d(${this.translateX >> 0}px,${this.translateY >> 0}px,${this.translateZ >> 0}px) ` +
+      `rotate3d(1,0,0,${this.rotateX >> 0}deg) ` +
+      `rotate3d(0,1,0,${this.rotateY >> 0}deg) ` +
+      `rotate3d(0,0,1,${this.rotateZ >> 0}deg)`
     }
   }
 
   // MODULE EXPORT
   return {
-    transformCard: transformCard
+    TransformCard: TransformCard
   }
 })

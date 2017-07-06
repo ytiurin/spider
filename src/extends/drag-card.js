@@ -26,109 +26,145 @@
     return value
   }
 
-  function dragCard(elements, transform, eventHandlers)
+  function dragCard(element, transform)
   {
-    function persistRotationTo(XDeg, YDeg, ZDeg)
+    function persistRotationTo(persistX, persistY, persistZ)
     {
-      if (XDeg !== rotateXDeg)
-        rotateX(rotateXDeg > XDeg ? -1 : 1)
+      if (persistX !== transform.rotateX)
+        rotateX(transform.rotateX > persistX ? -1 : 1)
 
-      if (YDeg !== rotateYDeg)
-        rotateY(rotateYDeg > YDeg ? -1 : 1)
+      if (persistY !== transform.rotateY)
+        rotateY(transform.rotateY > persistY ? -1 : 1)
 
-      if (ZDeg !== rotateZDeg)
-        rotateZ(rotateZDeg > ZDeg ? -1 : 1)
+      if (persistZ !== transform.rotateZ)
+        rotateZ(transform.rotateZ > persistZ ? -1 : 1)
 
-      transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
+      transform.apply()
 
-      if (XDeg === rotateXDeg && YDeg === rotateYDeg && ZDeg === rotateZDeg)
+      if (persistX === transform.rotateX &&
+          persistY === transform.rotateY &&
+          persistZ === transform.rotateZ)
         return
 
-      tendRotationAFID = requestAnimationFrame(function() {
-        persistRotationTo(XDeg, YDeg, ZDeg)
-      })
-    }
-
-    function tendRotationTo(XDeg, YDeg, ZDeg)
-    {
-      cancelAnimationFrame(tendRotationAFID)
-      tendRotationAFID = requestAnimationFrame(function() {
-        persistRotationTo(XDeg, YDeg, ZDeg)
-      })
+      persistRotationTOID = setTimeout(function() {
+        persistRotationTo(persistX, persistY, persistZ)
+      }, 10)
     }
 
     function rotateX(speed)
     {
-      rotateXDeg = applyLimit(rotateXDeg + speed, ROTATION_X_POS_LIMIT, ROTATION_X_NEG_LIMIT)
+      var posLimit = ROTATION_X_POS_LIMIT
+      var negLimit = ROTATION_X_NEG_LIMIT
+      if (publ.hasChildCard) {
+        posLimit = posLimit / 4 >> 0
+        negLimit = negLimit / 4 >> 0
+      }
+      transform.rotateX = applyLimit(transform.rotateX + speed, posLimit, negLimit)
     }
 
     function rotateY(speed)
     {
-      rotateYDeg = applyLimit(rotateYDeg + speed, ROTATION_Y_POS_LIMIT, ROTATION_Y_NEG_LIMIT)
+      transform.rotateY = applyLimit(transform.rotateY + speed, ROTATION_Y_POS_LIMIT, ROTATION_Y_NEG_LIMIT)
     }
 
     function rotateZ(speed)
     {
-      rotateZDeg = applyLimit(rotateZDeg + speed, ROTATION_Z_POS_LIMIT, ROTATION_Z_NEG_LIMIT)
+      var posLimit = ROTATION_Z_POS_LIMIT
+      var negLimit = ROTATION_Z_NEG_LIMIT
+      if (publ.hasChildCard) {
+        posLimit = posLimit / 4 >> 0
+        negLimit = negLimit / 4 >> 0
+      }
+      transform.rotateZ = applyLimit(transform.rotateZ + speed, posLimit, negLimit)
+    }
+
+    function performDrag(e)
+    {
+      transform.translateX = e.clientX - e.targetStartX
+      transform.translateY = e.clientY - e.targetStartY
+
+      var YSpeed = e.clientX - (prevDragX || e.clientX)
+      var XSpeed = e.clientY - (prevDragY || e.clientY)
+
+      rotateX(-XSpeed / 4 >> 0)
+      rotateZ( YSpeed / 4 >> 0)
+      rotateY( YSpeed / 4 >> 0)
+
+      transform.apply()
+
+      prevDragX = e.clientX
+      prevDragY = e.clientY
+
+      clearTimeout(persistRotationTOID)
+      persistRotationTOID = setTimeout(function() {
+        persistRotationTo(0,0,0)
+      }, 20)
+    }
+
+    function cancelTransform()
+    {
+      cancelAnimationFrame(dragAF)
+      dragAF = 0
+      if (!dragQueue.length)
+        return
+      performDrag(dragQueue.pop())
+      dragQueue = []
+    }
+
+    function smoothTransform()
+    {
+      dragAF = requestAnimationFrame(function() {
+        performDrag(dragQueue.shift())
+
+        if (dragQueue.length)
+          smoothTransform()
+        else
+          dragAF = 0
+      })
     }
 
     function drag(e)
     {
       log("DRAG CARD")
+      dragQueue.push(e)
 
-      transform.translate3d(
-        e.clientX - e.targetStartX,
-        e.clientY - e.targetStartY,
-        null)
-
-      var YSpeed = e.clientX - (prevDragX || e.clientX)
-      var XSpeed = e.clientY - (prevDragY || e.clientY)
-
-      // if (!publ.hasChildCard) {
-        rotateX(-XSpeed / 4 >> 0)
-        rotateZ( YSpeed / 4 >> 0)
-      // }
-      rotateY( YSpeed / 4 >> 0)
-      transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
-
-      prevDragX = e.clientX
-      prevDragY = e.clientY
-
-      tendRotationTo(0, 0, 0);
+      if (!dragAF)
+        smoothTransform()
     }
 
     function mousedown(e)
     {
-      transform.origin(e.offsetX, e.offsetY)
-      transform.translate3d(null, null, 100)
+      // transform.origin(e.offsetX, e.offsetY)
     }
 
     function dragend(e)
     {
-      transform.translate3d(null, null, 0)
-      rotateXDeg = 0
-      rotateYDeg = 0
-      rotateZDeg = 0
-      transform.rotate3d(rotateXDeg, rotateYDeg, rotateZDeg)
-      transform.origin()
+      cancelTransform()
+      clearTimeout(persistRotationTOID)
+      transform.rotateX = 0
+      transform.rotateY = 0
+      transform.rotateZ = 0
+      transform.apply()
+      // transform.origin()
     }
 
-    var elContainer = elements.elContainer
-    var elInteract  = elements.elInteract
+    function dragstart()
+    {
+      dragStartTime = new Date
+    }
 
     var prevDragX  = 0
     var prevDragY  = 0
-    var rotateXDeg = 0
-    var rotateYDeg = 0
-    var rotateZDeg = 0
 
-    var tendRotationAFID = 0
+    var persistRotationTOID = 0
+    var dragQueue = []
+    var dragAF = 0
+    var dragStartTime
 
-    var isLifted = !1
-
-    elInteract.addEventListener("drag",      drag)
-    elInteract.addEventListener("mousedown", mousedown)
-    elInteract.addEventListener("dragend",   dragend)
+    element.addEventListener("mousedown", mousedown)
+    element.addEventListener("drag",      drag)
+    element.addEventListener("dragend",   dragend)
+    element.addEventListener("dragstart", dragstart)
 
     var publ = { hasChildCard: false }
 
